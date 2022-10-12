@@ -21,13 +21,14 @@ export function Post({author, content, publishedAt}){
 
     function handleCreateNewComment(){
         event.preventDefault()
+        const comment = {
+            id: uuidV4(),
+            comment: newCommentText
+        }
         
         setComments([ 
             ...comments, 
-            {
-                id: uuidV4(),
-                comment: newCommentText
-            }
+            comment
         ])
         setNewCommentText("")
     }
@@ -35,6 +36,15 @@ export function Post({author, content, publishedAt}){
     function handleNewCommentChange(){
         setNewCommentText(event.target.value)
     }
+
+    function deleteComment(commentID){
+        const commentsWithoutDeletedOne = comments.filter(comment => {
+            return comment.id !== commentID
+        })
+
+        setComments(commentsWithoutDeletedOne)
+    }
+
     return (
         <article className={styles.post}>
             <header>
@@ -79,7 +89,11 @@ export function Post({author, content, publishedAt}){
 
             <div className={styles.commentList}>
                 {comments.map(comment => {
-                    return <Comment key={comment.id} content={comment} />
+                    return (<Comment 
+                        key={comment.id} 
+                        content={comment} 
+                        onDeleteComment={deleteComment} 
+                    />)
                 })}
             </div>
         </article>
