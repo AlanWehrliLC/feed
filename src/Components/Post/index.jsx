@@ -13,7 +13,10 @@ export function Post({author, content, publishedAt}){
     const [comments, setComments] = useState([
         {
             id: uuidV4(),
-            comment: "Nice project!"
+            name: "GitHub ",
+            avatarUrl: "https://github.com/github.png",
+            comment: "Nice project!",
+            publishedAt: new Date("2022-10-11 09:47:30")
         },
     ])
 
@@ -23,7 +26,10 @@ export function Post({author, content, publishedAt}){
         event.preventDefault()
         const comment = {
             id: uuidV4(),
-            comment: newCommentText
+            name: "GitHub ",
+            avatarUrl: "https://github.com/github.png",
+            comment: newCommentText,
+            publishedAt: new Date()
         }
         
         setComments([ 
