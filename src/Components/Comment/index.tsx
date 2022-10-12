@@ -4,7 +4,20 @@ import { useState } from "react"
 import { Avatar } from "../Avatar"
 import styles from "./styles.module.css"
 
-export function Comment({content, onDeleteComment}){
+interface Content {
+    id: string;
+    name: string;
+    avatarUrl: string;
+    comment: string;
+    publishedAt: Date;
+}
+
+interface CommentProps {
+    content: Content
+    onDeleteComment: (commentID: string)=> void
+}
+
+export function Comment({content, onDeleteComment}: CommentProps){
     const publishedAt = content.publishedAt
     const publishedDateFormatted = format(publishedAt, "MMMM dd',' yyyy 'at' hh:mm")
     const publishedDateRelativeToNow = formatDistanceToNow(publishedAt, {addSuffix: true})

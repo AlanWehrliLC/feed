@@ -1,12 +1,39 @@
 import {format, formatDistanceToNow} from "date-fns"
-import { useState } from "react"
+import { 
+    useState, 
+    FormEvent,
+    ChangeEvent,
+    InvalidEvent
+} from "react"
 import {v4 as uuidV4} from "uuid"
 
 import { Avatar } from "../Avatar"
 import { Comment } from "../Comment"
 import styles from "./styles.module.css"
 
-export function Post({author, content, publishedAt}){
+interface Author {
+    name: string
+    role: string
+    avatarUrl: string
+}
+
+interface Content {
+    type: string
+    id: string
+    content?: string
+    link?: {
+        contentLink: string;
+        linkUrl: string;
+    }
+}
+
+interface PostProps {
+    author: Author
+    content: Content[]
+    publishedAt: Date
+}
+
+export function Post({author, content, publishedAt}: PostProps){
     const publishedDateFormatted = format(publishedAt, "MMMM dd',' yyyy 'at' hh:mm")
     const publishedDateRelativeToNow = formatDistanceToNow(publishedAt, {addSuffix: true})
 
@@ -22,7 +49,7 @@ export function Post({author, content, publishedAt}){
 
     const [newCommentText, setNewCommentText] = useState("")
 
-    function handleCreateNewComment(){
+    function handleCreateNewComment(event: FormEvent){
         event.preventDefault()
         const comment = {
             id: uuidV4(),
@@ -39,16 +66,16 @@ export function Post({author, content, publishedAt}){
         setNewCommentText("")
     }
 
-    function handleNewCommentChange(){
+    function handleNewCommentChange(event: ChangeEvent<HTMLTextAreaElement>){
         event.target.setCustomValidity("")
         setNewCommentText(event.target.value)
     }
 
-    function handleNewCommentInvalid(){
+    function handleNewCommentInvalid(event: InvalidEvent<HTMLTextAreaElement>){
         event.target.setCustomValidity("This field is mandatory!")
     }
 
-    function deleteComment(commentID){
+    function deleteComment(commentID: string){
         const commentsWithoutDeletedOne = comments.filter(comment => {
             return comment.id !== commentID
         })
@@ -80,7 +107,7 @@ export function Post({author, content, publishedAt}){
                     if (line.type === "paragraph") {
                         return <p key={line.id}>{line.content}</p>
                     }else if (line.type === "link") {
-                        return <p key={line.id}><a target="_blank" href={line.link.link}>{line.link.content}</a></p>
+                        return <p key={line.id}><a target="_blank" href={line.link?.linkUrl}>{line.link?.contentLink}</a></p>
                     }
                 })}
             </div>
