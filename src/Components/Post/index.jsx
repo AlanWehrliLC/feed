@@ -1,38 +1,37 @@
+import {format, formatDistanceToNow} from "date-fns"
+
 import { Avatar } from "../Avatar"
 import { Comment } from "../Comment"
 import styles from "./styles.module.css"
 
-export function Post(){
+export function Post({author, content, publishedAt}){
+    const publishedDateFormatted = format(publishedAt, "MMMM dd',' yyyy 'at' hh:mm")
+    const publishedDateRelativeToNow = formatDistanceToNow(publishedAt, {addSuffix: true})
     return (
         <article className={styles.post}>
             <header>
 
                 <div className={styles.author}>
-                    <Avatar src="https://github.com/AlanWehrliLC.png" />
+                    <Avatar src={author.avatarUrl} />
                     <div className={styles.authorInfo} >
-                        <strong>Alan Wehrli</strong>
-                        <span>Software Engineer</span>
+                        <strong>{author.name}</strong>
+                        <span>{author.role}</span>
                     </div>
                 </div>
 
-                <time title="October 10, 2022 at 09:47" dateTime="2022-11-10 09:47:30">1 hours ago</time>
+                <time title={publishedDateFormatted} dateTime={publishedAt.toISOString()}>
+                    {publishedDateRelativeToNow}
+                </time>
             </header>
 
             <div className={styles.content}>
-                <p>Hey guys 👋</p>
-
-                <p>I just uploaded another project in my portfolio. It's a project I did for a Social Network Feed. Project name is Mushroom Phantom - Feed 🚀</p>
-
-                <p>👉 <a 
-                    href="https://github.com/AlanWehrliLC/feed"
-                    target="_blank"
-                > AlanWehrliLC/feed</a></p>
-
-                <p>
-                    <a href="#"> #Feed</a>
-                    <a href="#"> #SocialNetwork</a> 
-                    <a href="#"> #NewProject</a>
-                </p>
+                {content.map(line => {
+                    if (line.type === "paragraph") {
+                        return <p>{line.content}</p>
+                    }else if (line.type === "link") {
+                        return <p><a target="_blank" href={line.link.link}>{line.link.content}</a></p>
+                    }
+                })}
             </div>
 
             <form className={styles.commentForm}>
