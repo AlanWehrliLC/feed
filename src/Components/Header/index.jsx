@@ -1,4 +1,4 @@
-import styles from "./style.module.css"
+import styles from "./styles.module.css"
 
 import feedLogo from "../../assets/feed-logo.svg"
 
